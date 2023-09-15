@@ -9,9 +9,12 @@ using EntityFrameworkCore.RawSQLExtensions.Extensions;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BMTLLMS.Repository.Implementations
 {
@@ -79,6 +82,11 @@ namespace BMTLLMS.Repository.Implementations
                ParameterName = "SampleConditionID",
                Value = obj.SampleConditionID == null ? DBNull.Value : obj.SampleConditionID
             };
+            var SpecificationID = new SqlParameter
+            {
+               ParameterName = "SpecificationID",
+               Value = obj.SpecificationID == null ? DBNull.Value : obj.SpecificationID
+            };
             var NumberOfSamplePcs = new SqlParameter
             {
                ParameterName = "NumberOfSamplePcs",
@@ -106,8 +114,29 @@ namespace BMTLLMS.Repository.Implementations
             };
             var isActive = new SqlParameter { ParameterName = "IsActive", Value = obj.IsActive };
             var Creator = new SqlParameter { ParameterName = "Creator", Value = obj.Creator };
-            var result = _db.Database.SqlQuery<SaveVM>("InsertUpdateSampleReceive_SP @ID,@SampleID,@SampleConditionID,@NumberOfSamplePcs,@QtyPerSample,@ReceivedByID,@ReceivedDateTime,@Note,@IsActive,@Creator",
-                ID, SampleID, SampleConditionID, NumberOfSamplePcs, QtyPerSample, ReceivedByID, ReceivedDateTime, Note, isActive, Creator).FirstOrDefault();
+
+            IEnumerable<SampleSpecificationVM> SamplesSpecificationList = obj.SamplesSpecificationList;
+
+            string child1Sxml = "";
+            if (SamplesSpecificationList != null)
+            {
+               XElement childDataXml1 = new XElement("SamplesSpecificationList", SamplesSpecificationList.Select(x => new XElement("child",
+                         new XElement("ID", x.ID),
+                         new XElement("SampleID", x.SampleID),
+                         new XElement("SpecificationID", x.SpecificationID),
+                         new XElement("SpecificationValue", x.SpecificationValue),
+                         new XElement("Creator", x.Creator),
+                         new XElement("CreationDate", x.CreationDate)
+
+          )));
+               child1Sxml = childDataXml1.ToString();
+            }
+
+            SqlParameter xmlParm = new SqlParameter("@SamplesSpecificationList", SqlDbType.Xml);
+            xmlParm.Value = new SqlXml(System.Xml.XmlReader.Create(new System.IO.StringReader(child1Sxml)));
+
+            var result = _db.Database.SqlQuery<SaveVM>("InsertUpdateSampleReceive_SP @ID,@SampleID,@SampleConditionID,@SpecificationID,@NumberOfSamplePcs,@QtyPerSample,@ReceivedByID,@ReceivedDateTime,@Note,@IsActive,@Creator,@SamplesSpecificationList",
+                ID, SampleID, SampleConditionID, SpecificationID, NumberOfSamplePcs, QtyPerSample, ReceivedByID, ReceivedDateTime, Note, isActive, Creator, xmlParm).FirstOrDefault();
             if (result.IsSuccess == false)
             {
                result.Code = (int)ProjectCodes.Error;

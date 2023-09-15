@@ -23,6 +23,8 @@ namespace BMTLLMS.Domain.ViewModel.Request
          public string? SampleType { get; set; }
          public Int64 SampleTypeID { get; set; }
          public Int64 SampleID { get; set; } 
+         public Int64 SpecificationID { get; set; } 
+         public string? SpecificationValue { get; set; } 
          public string? SampleCategory { get; set; }
          public Int64 ReqNumberOfSamplePcs { get; set; }
          public decimal QtyPerSample   { get; set; }

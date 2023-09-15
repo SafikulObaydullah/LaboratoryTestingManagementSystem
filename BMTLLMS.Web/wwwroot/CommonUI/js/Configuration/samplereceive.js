@@ -13,7 +13,7 @@
    },
    
 ]
-
+var SamplesSpecificationList = [];
 var SampleReceive = [];
 SamplePhysicalConditionList = [];
 var OrderDetailsList = []
@@ -206,24 +206,37 @@ function BindTestListGrid() {
       ]
    });
 } 
-function AddSampleSpecification() { 
+function AddSampleSpecification() {
+   console.log("SampleReceive value",SampleReceive);
    $("#spanSpecification").html('');
    tempArray = []; 
-   for (var i = 0; i < SampleReceive.length; i++) { 
-      if ((($("#check_" + SampleReceive[i].id).is(":checked") === true) && (($("#txt_" + SampleReceive[i].id).val() === "") || ($("#txt_" + SampleReceive[i].id).val() === null)))) {
-         toastr.warning("Please input " + SampleReceive[i].name, "Warning");
-         $('#sampleSpecificationModal').modal('show');
-         return false;
-      } 
-   } 
+   //for (var i = 0; i < SampleReceive.length; i++) { 
+   //   if ((($("#check_" + SampleReceive[i].id).is(":checked") === true) && (($("#txt_" + SampleReceive[i].id).val() === "") || ($("#txt_" + SampleReceive[i].id).val() === null)))) {
+   //      toastr.warning("Please input " + SampleReceive[i].name, "Warning");
+   //      $('#sampleSpecificationModal').modal('show');
+   //      return false;
+   //   }
+   //} 
+
+   //for (var i = 0; i < SampleReceive.length; i++) {
+   //   // var isChecked = $("#check_" + SampleReceive[i].id).is(":checked");
+   //   $('#id').is(':checked')
+   //   console.log("Check value = ", document.querySelector('input[name="E1019"]:checked') ? true : false);
+   //      toastr.warning("Please input " + SampleReceive[i].name, "Warning");
+   //      $('#sampleSpecificationModal').modal('show');
+   //      return false;
+   //}
+   
+   
+
    for (var i = 0; i < SampleReceive.length; i++) {
-      if ((($("#check_" + SampleReceive[i].id).is(":checked") === true) && (($("#txt_" + SampleReceive[i].id).val() !== "") || ($("#txt_" + SampleReceive[i].id).val() !== null)))) {
+   //   if ((($("#check_" + SampleReceive[i].id).is(":checked") === true) && (($("#txt_" + SampleReceive[i].id).val() !== "") || ($("#txt_" + SampleReceive[i].id).val() !== null)))) {
          var obj = new Object();
          obj.namevalue = $("#txt_" + SampleReceive[i].id).val();
          obj.name = SampleReceive[i].name;
          obj.measurementUnitName = SampleReceive[i].measurementUnitName;  
          tempArray.push(obj); 
-      }
+    //}
    }
  
 var SampleHtml = "";
@@ -235,7 +248,8 @@ var SampleHtml = "";
             SampleHtml += tempArray[i].name +" "+ tempArray[i].namevalue + " " + tempArray[i].measurementUnitName;
          } 
       }
-      $("#spanSpecification").html(SampleHtml);
+     $("#spanSpecification").html(SampleHtml);
+     GetSamplesSpecificationList();
       if (tempArray.length > 0) {
          $('#sampleSpecificationModal').modal('hide');
       } 
@@ -269,12 +283,14 @@ function Search() {
    }
 }
 function SearchPanel(id, sampleTypeID) {
+   console.log("OrderDetailsList data value set",OrderDetailsList);
    var FilterData = _.filter(OrderDetailsList, function (item) { return item.id == id && item.sampleTypeID == sampleTypeID });
    $('#spanOrderRef').text(FilterData[0].id);
    $('#spanCustomer').text(FilterData[0].customerName);
    $('#spanSampleCategory').text(FilterData[0].sampleCategory);
    $('#spanSampleType').text(FilterData[0].sampleType);
    $('#spanSampleID').text(FilterData[0].sampleID);
+   $('#spanSpecificationID').text(FilterData[0].specificationID);
    $('#spanReqNumberOfSamplePcs').text(FilterData[0].reqNumberOfSamplePcs);
    $('#spanMeasurementUnit').text(FilterData[0].measurementUnitName);
    $('#spanMinimumReqQuantity').text(FilterData[0].qtyPerSample);
@@ -291,7 +307,7 @@ function SampleSpecification() {
    for (var i = 0; i < SampleReceive.length; i++) {
       html += "<div class='row g-3 mt-0' style='justify-content:left;'><span id='spanSampleSpecificationParentID' style='display:none'>0</span>" +
          "<div class='col-md-3' style='margin-top:28px'>" +
-         "<input id='check_" + SampleReceive[i].id + "' style='margin-right:5px;' type='checkbox'/><span>" + SampleReceive[i].name + "</span>" +
+         "<input id='check_" + SampleReceive[i].id + "' name='E1019' style='margin-right:5px;' type='Checkbox'/><span>" + SampleReceive[i].name + "</span>" +
          "</div>" +
          "<div class='col-md-6'>" +
          "<input id='txt_" + SampleReceive[i].id + "' role='' type='number' class='form-control' style='width:100%' onblur='checkEmptyInput(this)'/>" +
@@ -342,22 +358,24 @@ function SearchValidate() {
    return true;
 }
 function SaveSampleReceive() {
-   var o = new Object();
+   var obj = new Object();
    var validate = true;
    validate = Validate();
    if (validate == true) {
-      o.id = $('#spanParentID').html();
-      o.SampleID = $('#spanSampleID').text();
-      o.SampleConditionID = document.querySelector('input[name="samplePhysicalCondition"]:checked').value;
-      o.NumberOfSamplePcs = $('#spanReceivingNoOfPcs').val();
-      o.QtyPerSample = $('#spanReceivingQtyPerSample').val();
-      o.Note = $('#txtNote').val(); 
-      o.isActive = true; //$('#isActive').is(':checked') ? true : false;
+      obj.id = $('#spanParentID').html();
+      obj.SampleID = $('#spanSampleID').text();
+      obj.spanSpecificationID = $('#spanSpecificationID').text();
+      obj.SampleConditionID = document.querySelector('input[name="samplePhysicalCondition"]:checked').value;
+      obj.NumberOfSamplePcs = $('#spanReceivingNoOfPcs').val();
+      obj.QtyPerSample = $('#spanReceivingQtyPerSample').val();
+      obj.Note = $('#txtNote').val(); 
+      obj.isActive = true; //$('#isActive').is(':checked') ? true : false;
+      obj.SamplesSpecificationList = SamplesSpecificationList;
       $.ajax({
          url: "/SampleReceive/SaveSampleReceive",
          type: "POST",
          dataType: "json",
-         data: o,
+         data: obj,
          success: function (data) {
             if (data.code == 200) {
                toastr.success(data.message, 'Success');
@@ -372,6 +390,34 @@ function SaveSampleReceive() {
          }
       });
    }
+}
+function GetSamplesSpecificationList() {
+   var o = new Object();
+   var validate = true;
+   validate = SampleSpecificationValidate();
+   if (validate == true) {
+      o.SampleID = $("#spanSampleID").text();
+      o.SpecificationID = $('#spanSpecificationID').text();
+      o.SpecificationValue = $("#txt_" + SampleReceive[0].id).val();
+      o.Creator = 1;
+      o.CreationDate = '08-21-2023'
+      //var FilterData = _.filter(SamplesSpecificationList, function (item) {
+      //   return item.TestStandardID == o.TestStandardID &&
+      //      item.CurrencyID == o.CurrencyID
+
+      //});
+      //if (FilterData.length > 0) {
+      //   toastr.warning("Already Added", "Waring");
+      //}
+      /*else {*/
+         SamplesSpecificationList.push(o);
+         //BindTestStandardPriceTable(SamplesSpecificationList);
+      //}
+   }
+}
+function SampleSpecificationValidate() {
+
+   return true
 }
 function Validate() {
    if ($('#spanReceivingNoOfPcs').val() == "") {

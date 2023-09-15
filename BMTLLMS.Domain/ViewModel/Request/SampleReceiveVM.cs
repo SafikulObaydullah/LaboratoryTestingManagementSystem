@@ -10,7 +10,8 @@ namespace BMTLLMS.Domain.ViewModel.Request
    {
       public Int64 ID { get; set; } 
       public Int64 SampleID { get; set; }
-      public Int64 SampleConditionID { get; set; }
+      public Int64 SampleConditionID { get; set; } 
+      public Int64 SpecificationID { get; set; } 
       public Int64 NumberOfSamplePcs { get; set; }
       public Int64 QtyPerSample { get; set; }
       public Int64 ReceivedByID { get; set; }
@@ -22,6 +23,7 @@ namespace BMTLLMS.Domain.ViewModel.Request
       public DateTime? CreationDate { get; set; }
       public Int64? Modifier { get; set; }
       public DateTime? ModificationDate { get; set; }
+      public List<SampleSpecificationVM> SamplesSpecificationList { get; set; }
 
    }
 }
