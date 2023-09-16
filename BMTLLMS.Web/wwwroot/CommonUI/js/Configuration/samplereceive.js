@@ -393,14 +393,22 @@ function SaveSampleReceive() {
 }
 function GetSamplesSpecificationList() {
    var o = new Object();
-   var validate = true;
-   validate = SampleSpecificationValidate();
-   if (validate == true) {
+  
       o.SampleID = $("#spanSampleID").text();
       o.SpecificationID = $('#spanSpecificationID').text();
-      o.SpecificationValue = $("#txt_" + SampleReceive[0].id).val();
+      //o.SpecificationValue = $("#txt_" + SampleReceive[0].id).val();
       o.Creator = 1;
       o.CreationDate = '08-21-2023'
+      for (var i = 0; i < SampleReceive.length; i++) {
+         // $("#checkboxId").prop('checked', true)
+         if (document.querySelector('input[name="E1019"]:checked')) {
+            debugger;
+            console.log($("#txt_" + SampleReceive[i].id).val());
+            o.SpecificationValue = $("#txt_" + SampleReceive[i].id).val();
+         }   
+      }
+      SamplesSpecificationList.push(o);
+
       //var FilterData = _.filter(SamplesSpecificationList, function (item) {
       //   return item.TestStandardID == o.TestStandardID &&
       //      item.CurrencyID == o.CurrencyID
@@ -410,10 +418,9 @@ function GetSamplesSpecificationList() {
       //   toastr.warning("Already Added", "Waring");
       //}
       /*else {*/
-         SamplesSpecificationList.push(o);
+         //SamplesSpecificationList.push(o);
          //BindTestStandardPriceTable(SamplesSpecificationList);
       //}
-   }
 }
 function SampleSpecificationValidate() {
 

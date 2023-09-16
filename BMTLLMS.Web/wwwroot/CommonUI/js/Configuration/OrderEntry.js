@@ -128,7 +128,7 @@ $(document).ready(function () {
         var stepperValidate = true;
         stepperValidate = ValidateFirstStepper();
         if (stepperValidate == true) {
-            debugger
+         
             //api call
             // SampleInfoData();
 
