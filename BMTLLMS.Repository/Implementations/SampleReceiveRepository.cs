@@ -124,7 +124,7 @@ namespace BMTLLMS.Repository.Implementations
                          new XElement("ID", x.ID),
                          new XElement("SampleID", x.SampleID),
                          new XElement("SpecificationID", x.SpecificationID),
-                         new XElement("SpecificationValue", x.SpecificationValue),
+                         new XElement("SpecificationValue", x.Specifications),
                          new XElement("Creator", x.Creator),
                          new XElement("CreationDate", x.CreationDate)
 

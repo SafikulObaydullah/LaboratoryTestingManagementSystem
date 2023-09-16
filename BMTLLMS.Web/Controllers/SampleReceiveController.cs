@@ -7,6 +7,7 @@ using BMTLLMS.Service.Contracts;
 using BMTLLMS.Service.Implementations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Dynamic;
 
 namespace BMTLLMS.Web.Controllers
@@ -40,7 +41,7 @@ namespace BMTLLMS.Web.Controllers
             var user = User.Claims.ToList();
             obj.Creator = Convert.ToInt64(user[1].Value);
             obj.ReceivedByID = Convert.ToInt64(user[1].Value);
-            obj.ReceivedDateTime = DateTime.Now;
+            obj.ReceivedDateTime = DateTime.Now; 
             if (ModelState.IsValid)
             {
                var result = _sampleReceiveFacade.SaveSampleReceive(obj);
@@ -53,13 +54,13 @@ namespace BMTLLMS.Web.Controllers
          public JsonResult GetInitialData()
          {
          SampleReceiveSearchListVM obj = new SampleReceiveSearchListVM();
-         obj.OrderRefNo = 0;
-         obj.OrderDateFrom = "";
-         obj.OrderDateTo = "";
-         obj.StatusID = 0;
-         obj.DeliveryDateFrom = "";
-         obj.DeliveryDateTo = "";
-         dynamic result = new ExpandoObject();
+            obj.OrderRefNo = 0;
+            obj.OrderDateFrom = "";
+            obj.OrderDateTo = "";
+            obj.StatusID = 0;
+            obj.DeliveryDateFrom = "";
+            obj.DeliveryDateTo = "";
+            dynamic result = new ExpandoObject();
             try
             {
                result.samplePhysicalCondtion = _specificationHeadFacade.GetSamplePhysicalCondition();

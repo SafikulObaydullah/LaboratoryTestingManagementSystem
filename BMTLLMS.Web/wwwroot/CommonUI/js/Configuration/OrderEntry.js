@@ -329,7 +329,7 @@ $(document).ready(function () {
 
 
 function SampleInfoData(isSearch) {
-    debugger
+    
     var obj = new Object();
     obj.CustomerId = $("#cmbCustomer").data('kendoComboBox').value();
     obj.CurrencyCode = $("#cmbCurrency").data('kendoComboBox').value();
@@ -483,7 +483,7 @@ function updateSampleTypeComboBox(selectedValue) {
 }
 
 function updateTestStandardComboBox(selectedValue) {
-    debugger
+   
     console.log(FilteredList, selectedValue)
     TestStandardfilteredList = _.filter(FilteredList, item => item.sampleTypeID == selectedValue);
     //var uniqListStandard = _.uniq(TestStandardfilteredList, item => item.testStandardId);
@@ -543,7 +543,7 @@ function getTestType(selectedValue) {
 
 
 function AddSampleInfo() {
-    debugger
+ 
 
     //var obj = new Object()
     //obj.SampleCategoryId = $('#cmbSampleName').data('kendoComboBox').value();

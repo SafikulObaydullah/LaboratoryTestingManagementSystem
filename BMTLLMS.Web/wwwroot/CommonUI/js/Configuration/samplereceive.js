@@ -13,7 +13,7 @@
    },
    
 ]
-var SamplesSpecificationList = [];
+var SamplesSpecificationHeadList = [];
 var SampleReceive = [];
 SamplePhysicalConditionList = [];
 var OrderDetailsList = []
@@ -364,13 +364,14 @@ function SaveSampleReceive() {
    if (validate == true) {
       obj.id = $('#spanParentID').html();
       obj.SampleID = $('#spanSampleID').text();
-      obj.spanSpecificationID = $('#spanSpecificationID').text();
+      obj.SpecificationID = $('#spanSpecificationID').text();
       obj.SampleConditionID = document.querySelector('input[name="samplePhysicalCondition"]:checked').value;
       obj.NumberOfSamplePcs = $('#spanReceivingNoOfPcs').val();
       obj.QtyPerSample = $('#spanReceivingQtyPerSample').val();
       obj.Note = $('#txtNote').val(); 
       obj.isActive = true; //$('#isActive').is(':checked') ? true : false;
-      obj.SamplesSpecificationList = SamplesSpecificationList;
+      debugger;
+      obj.SamplesSpecificationList = SamplesSpecificationHeadList;
       $.ajax({
          url: "/SampleReceive/SaveSampleReceive",
          type: "POST",
@@ -391,25 +392,27 @@ function SaveSampleReceive() {
       });
    }
 }
+var SampleArray = [];
 function GetSamplesSpecificationList() {
-   var o = new Object();
-  
+   var o = new Object(); 
       o.SampleID = $("#spanSampleID").text();
       o.SpecificationID = $('#spanSpecificationID').text();
       //o.SpecificationValue = $("#txt_" + SampleReceive[0].id).val();
       o.Creator = 1;
       o.CreationDate = '08-21-2023'
       for (var i = 0; i < SampleReceive.length; i++) {
-         // $("#checkboxId").prop('checked', true)
          if (document.querySelector('input[name="E1019"]:checked')) {
             debugger;
             console.log($("#txt_" + SampleReceive[i].id).val());
-            o.SpecificationValue = $("#txt_" + SampleReceive[i].id).val();
+            SampleArray[i] = $("#txt_" + SampleReceive[i].id).val();
+            //SamplesSpecificationHeadList[i] = $("#txt_" + SampleReceive[i].id).val();
          }   
       }
-      SamplesSpecificationList.push(o);
+      o.Specifications = SampleArray;
+      SamplesSpecificationHeadList.push(o);
+      console.log(SamplesSpecificationHeadList);
 
-      //var FilterData = _.filter(SamplesSpecificationList, function (item) {
+      //var FilterData = _.filter(SamplesSpecificationHeadList, function (item) {
       //   return item.TestStandardID == o.TestStandardID &&
       //      item.CurrencyID == o.CurrencyID
 
@@ -418,8 +421,8 @@ function GetSamplesSpecificationList() {
       //   toastr.warning("Already Added", "Waring");
       //}
       /*else {*/
-         //SamplesSpecificationList.push(o);
-         //BindTestStandardPriceTable(SamplesSpecificationList);
+         //SamplesSpecificationHeadList.push(o);
+         //BindTestStandardPriceTable(SamplesSpecificationHeadList);
       //}
 }
 function SampleSpecificationValidate() {
