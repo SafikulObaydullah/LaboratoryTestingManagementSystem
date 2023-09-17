@@ -209,14 +209,17 @@ function BindTestListGrid() {
 function AddSampleSpecification() {
    console.log("SampleReceive value",SampleReceive);
    $("#spanSpecification").html('');
-   tempArray = []; 
-   //for (var i = 0; i < SampleReceive.length; i++) { 
-   //   if ((($("#check_" + SampleReceive[i].id).is(":checked") === true) && (($("#txt_" + SampleReceive[i].id).val() === "") || ($("#txt_" + SampleReceive[i].id).val() === null)))) {
-   //      toastr.warning("Please input " + SampleReceive[i].name, "Warning");
-   //      $('#sampleSpecificationModal').modal('show');
-   //      return false;
-   //   }
-   //} 
+   tempArray = [];
+   debugger;
+   for (var i = 0; i < SampleReceive.length; i++) {
+      console.log($("#check_" + SampleReceive[i].id).is(":checked"));
+      console.log($("#txt_" + SampleReceive[i].id).val());
+      if ((($("#check_" + SampleReceive[i].id).is(":checked") === true) && (($("#txt_" + SampleReceive[i].id).val() === "") || ($("#txt_" + SampleReceive[i].id).val() === null)))) {
+         toastr.warning("Please input " + SampleReceive[i].name, "Warning");
+         $('#sampleSpecificationModal').modal('show');
+         return false;
+      }
+   } 
 
    //for (var i = 0; i < SampleReceive.length; i++) {
    //   // var isChecked = $("#check_" + SampleReceive[i].id).is(":checked");
@@ -230,15 +233,17 @@ function AddSampleSpecification() {
    
 
    for (var i = 0; i < SampleReceive.length; i++) {
-   //   if ((($("#check_" + SampleReceive[i].id).is(":checked") === true) && (($("#txt_" + SampleReceive[i].id).val() !== "") || ($("#txt_" + SampleReceive[i].id).val() !== null)))) {
-         var obj = new Object();
-         obj.namevalue = $("#txt_" + SampleReceive[i].id).val();
-         obj.name = SampleReceive[i].name;
-         obj.measurementUnitName = SampleReceive[i].measurementUnitName;  
-         tempArray.push(obj); 
-    //}
+      // if ((($("#check_" + SampleReceive[i].id).is(":checked") === true) && (($("#txt_" + SampleReceive[i].id).val() !== "") || ($("#txt_" + SampleReceive[i].id).val() !== null)))) {
+       //if ((($("#check_" + SampleReceive[i].id).is(":checked") === true))) {
+            var obj = new Object();
+            obj.namevalue = $("#txt_" + SampleReceive[i].id).val();
+            obj.name = SampleReceive[i].name;
+            obj.measurementUnitName = SampleReceive[i].measurementUnitName;  
+            tempArray.push(obj); 
+       //}
    }
- 
+   debugger;
+   console.log(tempArray);
 var SampleHtml = "";
       for (var i = 0; i < tempArray.length; i++) { 
          if (i < tempArray.length - 1) {
@@ -249,10 +254,12 @@ var SampleHtml = "";
          } 
       }
      $("#spanSpecification").html(SampleHtml);
-     GetSamplesSpecificationList();
+     
       if (tempArray.length > 0) {
          $('#sampleSpecificationModal').modal('hide');
       } 
+      //GetSamplesSpecificationList();
+   GetSamplesSpecificationList(tempArray);
 }
 function CloseModal() {
    $('#mdlSearchPanel').modal('toggle');
@@ -393,20 +400,24 @@ function SaveSampleReceive() {
    }
 }
 var SampleArray = [];
-function GetSamplesSpecificationList() {
+function GetSamplesSpecificationList(data) {
    var o = new Object(); 
       o.SampleID = $("#spanSampleID").text();
       o.SpecificationID = $('#spanSpecificationID').text();
       //o.SpecificationValue = $("#txt_" + SampleReceive[0].id).val();
       o.Creator = 1;
       o.CreationDate = '08-21-2023'
-      for (var i = 0; i < SampleReceive.length; i++) {
-         if (document.querySelector('input[name="E1019"]:checked')) {
-            debugger;
-            console.log($("#txt_" + SampleReceive[i].id).val());
-            SampleArray[i] = $("#txt_" + SampleReceive[i].id).val();
+   for (var i = 0; i < data.length; i++) {
+      debugger;
+      console.log(document.querySelector('input[name="E1019"]:checked'));
+      //if (document.querySelector('input[name="E1019"]:checked').value === true) {
+      //if (($("#check_" + data[i].id).is(":checked") === true)) {
+
+          console.log($("#txt_" + data[i].namevalue).val());
+            //SampleArray[i] = $("#txt_" + data[i].namevalue).val();
+            SampleArray[i] = data[i].namevalue;
             //SamplesSpecificationHeadList[i] = $("#txt_" + SampleReceive[i].id).val();
-         }   
+         //}   
       }
       o.Specifications = SampleArray;
       SamplesSpecificationHeadList.push(o);
